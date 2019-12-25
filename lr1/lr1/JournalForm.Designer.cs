@@ -47,7 +47,7 @@
             this.ClientSize = new System.Drawing.Size(555, 290);
             this.Controls.Add(this.richTextBox1);
             this.Name = "JournalForm";
-            this.Text = "JournalForm";
+            this.Text = "Журнал авторизаций";
             this.Load += new System.EventHandler(this.JournalForm_Load);
             this.ResumeLayout(false);
 

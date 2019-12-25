@@ -116,6 +116,7 @@ namespace lr1
             {
                 button2.Visible = false;
                 button3.Visible = false;
+                button4.Visible = false;
             }
         }
 
@@ -161,6 +162,10 @@ namespace lr1
             hashedPassword = hashedPassword.Replace("\t", "");
             hashedPassword = hashedPassword.Replace("\r", "");
 
+            using (StreamWriter sw = new StreamWriter(@"log.txt", true))
+            {
+                sw.WriteLine(DateTime.Now + " " + "Проверка w'N И wN");
+            }
             if (hashedPassword == userF2.password)
             {
                 int ind = -1;
@@ -189,6 +194,10 @@ namespace lr1
                 }
                 else
                 {
+                    using (StreamWriter sw = new StreamWriter(@"log.txt", true))
+                    {
+                        sw.WriteLine(DateTime.Now + " " + "Изменение номера актуального одноразового пароля");
+                    }
                     hashedPassword = password;
                     // Удаляем из захешированной фразы лишние символы, которые мешают считыванию
                     hashedPassword = hashedPassword.Replace(" ", "");
