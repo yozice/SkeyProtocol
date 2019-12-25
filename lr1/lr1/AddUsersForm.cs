@@ -37,7 +37,7 @@ namespace lr1
                 dataBase.dBase.Add(user);
                 using (StreamWriter sw = new StreamWriter(@"log.txt", true))
                 {
-                    sw.WriteLine("Пользователь " + textBox1.Text + " добавлен");
+                    sw.WriteLine(DateTime.Now + " " + "Пользователь " + textBox1.Text + " добавлен");
                 }
                 label2.Text = "Пользователь " + textBox1.Text + " добавлен";
             }

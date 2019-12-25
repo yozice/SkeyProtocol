@@ -17,6 +17,7 @@ namespace lr1
         private static profile userF2;
         public static bool userExists;
         public static bool isFirstAuthF2;
+        public static int defaultIterNum;
 
         public ActSelForm(string name)
         {
@@ -42,7 +43,7 @@ namespace lr1
             {
                 using (StreamWriter sw = new StreamWriter(@"log.txt"))
                 {
-                    sw.WriteLine("Создание учетной записи администратора..");
+                    sw.WriteLine(DateTime.Now + " " + "Создание учетной записи администратора..");
                 }
                 profile user;
                 user.name = "Admin";
@@ -61,7 +62,7 @@ namespace lr1
                     {
                         using (StreamWriter sw = new StreamWriter(@"log.txt", true))
                         {
-                            sw.WriteLine("Первый вход пользователя:" + " " + userF2.name);
+                            sw.WriteLine(DateTime.Now + " " + "Первый вход пользователя:" + " " + userF2.name);
                         }
                         isFirstAuthF2 = true;
                     }
@@ -69,13 +70,14 @@ namespace lr1
                     {
                         using (StreamWriter sw = new StreamWriter(@"log.txt", true))
                         {
-                            sw.WriteLine("Авторизация пользователя:" + " " + userF2.name);
+                            sw.WriteLine(DateTime.Now + " " + "Авторизация пользователя:" + " " + userF2.name);
                         }
                         isFirstAuthF2 = false;
                     }
                     break;
                 }
             }
+            defaultIterNum = 500;
             InitializeComponent();
         }
 
@@ -102,7 +104,7 @@ namespace lr1
         {
             using(StreamWriter sw = new StreamWriter(@"log.txt", true))
             {
-                sw.WriteLine("Вход в программу");
+                sw.WriteLine(DateTime.Now + " " + "Вход в программу");
             }
             if (isFirstAuthF2)
             {
@@ -146,7 +148,7 @@ namespace lr1
         {
             using (StreamWriter sw = new StreamWriter(@"log.txt", true))
             {
-                sw.WriteLine("Аутентификация пользователя..");
+                sw.WriteLine(DateTime.Now + " " + "Аутентификация пользователя..");
             }
             string hashedPassword = "";
             using (SHA512 shaM = new SHA512Managed())
@@ -174,22 +176,14 @@ namespace lr1
                 // если 2, то генерируем новые одноразовые ключи
                 if(userF2.hashIter == 2)
                 {
-                    string hPswd = password;
-                    for (var i = 0; i < 499; i++)
+                    using (StreamWriter sw = new StreamWriter(@"log.txt", true))
                     {
-                        using (SHA512 shaM = new SHA512Managed())
-                        {
-                            hPswd = Encoding.UTF8.GetString(shaM.ComputeHash(Encoding.UTF8.GetBytes(hPswd)));
-                        }
+                        sw.WriteLine(DateTime.Now + " " + "Список одноразовых паролей закончился");
                     }
-                    // Удаляем из захешированной фразы лишние символы, которые мешают считыванию
-                    hashedPassword = hashedPassword.Replace(" ", "");
-                    hashedPassword = hashedPassword.Replace("\n", "");
-                    hashedPassword = hashedPassword.Replace("\t", "");
-                    hashedPassword = hashedPassword.Replace("\r", "");
+                    string hPswd = initList(password);
 
                     userF2.password = hPswd;
-                    userF2.hashIter = 500;
+                    userF2.hashIter = defaultIterNum;
                     dataBase.dBase[ind] = userF2;
                     return true;
                 }
@@ -211,19 +205,47 @@ namespace lr1
             {
                 using (StreamWriter sw = new StreamWriter(@"log.txt", true))
                 {
-                    sw.WriteLine("Неверно введен пароль");
+                    sw.WriteLine(DateTime.Now + " " + "Неверно введен пароль");
                 }
                 return false;
             }
+        }
+
+        public static string initList(string hPswd)
+        {
+            using (StreamWriter sw = new StreamWriter(@"log.txt", true))
+            {
+                sw.WriteLine(DateTime.Now + " " + "Генерация списка одноразовых паролей");
+            }
+            string hashedPassword = hPswd;
+            for (var i = 0; i < defaultIterNum; i++)
+            {
+                using (SHA512 shaM = new SHA512Managed())
+                {
+                    hashedPassword = Encoding.UTF8.GetString(shaM.ComputeHash(Encoding.UTF8.GetBytes(hashedPassword)));
+                }
+            }
+            // Удаляем из захешированной фразы лишние символы, которые мешают считыванию
+            hashedPassword = hashedPassword.Replace(" ", "");
+            hashedPassword = hashedPassword.Replace("\n", "");
+            hashedPassword = hashedPassword.Replace("\t", "");
+            hashedPassword = hashedPassword.Replace("\r", "");
+            return hashedPassword;
         }
 
         public static int getHashIterNumber()
         {
             using (StreamWriter sw = new StreamWriter(@"log.txt", true))
             {
-                sw.WriteLine("Получение номера ключа..");
+                sw.WriteLine(DateTime.Now + " " + "Получение номера ключа..");
             }
             return userF2.hashIter;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            JournalForm jForm = new JournalForm();
+            jForm.Show();
         }
     }
 }

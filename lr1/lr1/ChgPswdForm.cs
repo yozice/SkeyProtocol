@@ -56,22 +56,9 @@ namespace lr1
                 {
                     if (textBox1.Text == textBox2.Text)
                     {
-                        hashedPassword = textBox1.Text;
-                        for (var i = 0; i < 500; i++)
-                        {
-                            using (SHA512 shaM = new SHA512Managed())
-                            {
-                                hashedPassword = Encoding.UTF8.GetString(shaM.ComputeHash(Encoding.UTF8.GetBytes(hashedPassword)));
-                            }
-                        }
-                        // Удаляем из захешированной фразы лишние символы, которые мешают считыванию
-                        hashedPassword = hashedPassword.Replace(" ", "");
-                        hashedPassword = hashedPassword.Replace("\n", "");
-                        hashedPassword = hashedPassword.Replace("\t", "");
-                        hashedPassword = hashedPassword.Replace("\r", "");
-
+                        hashedPassword = ActSelForm.initList(textBox1.Text);
                         userF3.password = hashedPassword;
-                        userF3.hashIter = 500;
+                        userF3.hashIter = ActSelForm.defaultIterNum;
                         pswChanged = true;
                     }
                     else
@@ -106,22 +93,10 @@ namespace lr1
                     {
                         if (textBox1.Text == textBox2.Text)
                         {
-                            hashedPassword = textBox1.Text;
-                            for(var i =0;i<500;i++)
-                            {
-                                using (SHA512 shaM = new SHA512Managed())
-                                {
-                                    hashedPassword = Encoding.UTF8.GetString(shaM.ComputeHash(Encoding.UTF8.GetBytes(hashedPassword)));
-                                }
-                            }
-                            // Удаляем из захешированной фразы лишние символы, которые мешают считыванию
-                            hashedPassword = hashedPassword.Replace(" ", "");
-                            hashedPassword = hashedPassword.Replace("\n", "");
-                            hashedPassword = hashedPassword.Replace("\t", "");
-                            hashedPassword = hashedPassword.Replace("\r", "");
+                            hashedPassword = ActSelForm.initList(textBox1.Text);
 
                             userF3.password = hashedPassword;
-                            userF3.hashIter = 500;
+                            userF3.hashIter = ActSelForm.defaultIterNum;
                             pswChanged = true;
                         }
                         else
@@ -145,7 +120,7 @@ namespace lr1
             {
                 using (StreamWriter sw = new StreamWriter(@"log.txt", true))
                 {
-                    sw.WriteLine("Пароль изменен");
+                    sw.WriteLine(DateTime.Now + " " + "Пароль изменен");
                 }
                 Close();
             }
